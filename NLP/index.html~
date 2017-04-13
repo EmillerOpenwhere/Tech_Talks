@@ -1,0 +1,316 @@
+a!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>				
+					<h2>Natural language processing<h2>
+					
+				</section>
+				<section>
+				<h1> Apply Probability and statistics to linguistics <h1>
+				</section>
+				
+				<section>
+					<section>
+						<h1> Motivation <h1>
+					</section>
+					<section>
+						<h2> Text is everywhere, especially on the internet <h2>
+						<p></p>
+						<p class="fragment"> News,</p> 
+					    <p>
+						   <span class = "fragment">		
+								Social Media
+						   </span> 
+						</p>
+					    <p>
+						   <span class = "fragment">		
+								Print Media
+						   </span> 
+						</p>
+					    <p>
+						   <span class = "fragment">		
+								Audio 
+						   </span> 
+						</p>
+					</section>
+					<section>
+						<h3>Text is just data</h3>
+						<p class = "fragment">Albeit Highly Unstructered</p>
+						<p> <span class = "fragment"> And Noisy</span></p>
+					</section>
+				</section>
+				<section>
+					<section>
+					<h1> Preprocessing</h1>
+					</section>
+					<section>
+					<h3> Cleaning 	</h3>
+					<pre><code class="python" data-trim contenteditable>
+					‘Criminal Minds: Beyond Borders’ review:| Newsday
+					‘Criminal Minds: Beyond Borders’ review:  
+					Criminal Minds Beyond Borders review 					
+					</code></pre>					
+					<p class = "fragment"> Denoising </p>
+					<p><span class = "fragment"> Removing Irrelevant information</span> </p>
+					
+					<aside class="notes"> 
+				     Punctuation, html, low information words, just add noise and can obfuscate models.	
+				    </aside> 	
+					</section>
+					<section>
+					<h3> Tokenization </h3>
+					<pre><code class="python" data-trim contenteditable>
+'Justice Eakin made the right move with Supreme Court resignation'
+['Justice','Eakin','made','the','right',
+ 'move','with','Supreme','Court','resignation']
+					</code></pre>					
+					<aside class="notes"> 
+					Starting point to add structure to our unstractured text data.
+				    </aside> 	
+					</section>
+					<section>
+					<h3> Stemming </h3>
+					<pre><code class="python" data-trim contenteditable>
+United Nations News Centre UN agency welcomes Malawis decision to reopen former camp for Mozambique refugees
+Unite Nation New Centr UN agenc welcom Malawi decis to reopen former camp for Mozambiqu refuge
+					
+						
+					</code></pre>					
+					
+					<p class = "fragment"> Reduce word to its root </p>
+					</section>
+					<section>
+					<h3> Named Entity Extraction </h3>
+					<pre><code class="c++" data-trim contenteditable>
+'Kermit Thompson, 84, told Alive’s Matt Pearl.' 
+
+Actors: Kermit Thonson
+		Matt Pearl
+
+'Crews from across U.S. move into Rabun County to fight fires 
+Several wildfires continue to burn forests in north Georgia.'
+Locations: Rabun County
+		   Georgia
+					</pre></code>
+					</section>
+
+					<section>
+					<h3> Resolution </h3>
+					<pre><code class="python" data-trim contenteditable>
+'@NASA'
+'NASA' ----> 'NASA'
+
+'Forest Service'
+'The Forest Service'
+'U.S Forestry Service' -----> 'Forest Service'
+
+'hilary clinton'
+'Hilary Clinton'
+'Hilary R. Clinton' ------> 'hilary clinton'
+					</code></pre>
+					</section>
+					<section>
+					<h3> Parsing / POS Tagging </h3>
+					<pre><code class="python" data-trim contenteditable>
+'last year alone, disasters continued to undermine development gains'
+[('Last', 'ADJ'),('year', 'NOUN'),('alone', 'ADV'),(',', 'PUNCT'),('disasters', 'NOUN'),('continued', 'VERB'),
+ ('to', 'PART'),('undermine', 'VERB'),('development', 'NOUN'),('gains', 'NOUN'),('.', 'PUNCT')]
+					</pre></code>	
+					<p class = "fragment"> POS can change depending on cotext </p>
+					<pre><span class="fragment"><code class="python" data-trim contenteditable>
+				'This is an oil painting.'
+				oil - ADJ	
+				'He wanted to oil his bike'
+				oil - VERB
+					</code></span></pre>
+					</section>
+					<section>
+					<h3>Dependency Trees </h3>
+					<pre><code class="python" data-trim contenteditable>
+
+'last year alone, disasters continued to undermine development gains'
+
+		continued
+  ____________________|________________________
+ |      |      |             |             undermine
+ |      |      |             |           ______|__________
+ |      |      |            year        |               gains
+ |      |      |       ______|_____     |                 |
+ ,  disasters  .     Last        alone  to           development</pre></code>
+					</section>				
+					</section>
+
+				<section>
+
+					<section>
+					<h3> Feature Extraction </h3>
+					<p> Convert text to a meaningful numerical representation </p>
+					<p> Used to prepare text for machine learning and probabilistic models </p>
+					</section>
+
+					 <section data-markdown>
+						<h3> Curse of dimensionality </h3>
+
+						<p> Text Data is very high dimensional</p>
+![97% of HackerOne hackers are male](img/cursedimensionality.jpg)
+					</section>
+					<section>
+					<p> Bag of Words -  each document is composed of a frequency of words </p>
+					<pre><code class="python" data-trim contenteditable>
+'John likes to watch movies. Mary likes movies too.'
+{'.': 2, 'John': 1, 'Mary': 1, 'also': 0, 'football': 0, 'games': 0,
+ 'likes': 2, 'movies': 2, 'to': 1, 'too': 1, 'watch': 1}
+
+'John also likes to watch football games.'
+{'.': 1, 'John': 1, 'Mary': 0, 'also': 1, 'football': 1, 'games': 1, 'likes': 1,
+ 'movies': 0, 'to': 1, 'too': 0, 'watch': 1}
+					</pre></code>
+					</section>
+					<section>
+					<p> Term Frequency - Inverse Document Frequency</p>
+						<p>TF(t) = (Number of times term t appears in a document) / (Total number of terms in the document) </p>
+						<p>IDF(t) = log_e(Total number of documents / Number of documents with term t in it).</p>
+					<p class = "fragment">Highly useful for reducing dimensionality </p>
+					</section>
+					<section data-markdown>
+					<h1>Word 2 Vec </h1>
+					</section>
+<section data-markdown>
+<p> Each word becomes a vector, determined by its embeddigs.</p>
+
+![97% of HackerOne hackers are male](img/word2vec-king-queen-vectors.png)
+</section>
+<section data-markdown>
+<p> Dimensionality is reduced, but semantic information remains </p> 
+![97% of HackerOne hackers are male](img/word2vec-plural-relation.png)
+</section>
+					</section>
+
+					<section>
+					<section>
+					<h1> Probabilistic Models </h1>
+					</section>	
+					<section data-markdown>
+					<p> Latent Dirschlet Allocation (LDA) </p>
+
+					<p> Form of Topic modeling </p>
+
+					<p> Applies a generative model to see trends given an assumed fixed number of topics </p>
+				    ![97% of HackerOne hackers are male](img/IntroToLDA.png)
+	
+					</section>					
+				    <section>
+					<p> Hierarchical LDA </p>
+					<p> Instead of a fixed number of topics, assume the spread of topics themselves is a distribution</p>
+					</section>	
+					<section>
+					<h3> Text Classification </h3>	
+					<p>  Once text has been preprocessed, and annotated, it can be fed through any machine learning algorithm </p>
+					<p class="fragment"> Of which there are many, many</p>
+					</section>
+					<section data-markdown>
+					<p> Naive Bayes </p>	
+					<p> Most probable class given a number of words </p>
+				    ![97% of HackerOne hackers are male](img/NB.png)
+					</section>
+					<section data-markdown>
+					<h1> Neural Networks</h1>
+				    ![](img/NeuralNetwork.png)
+					</section>
+					<section>
+					<p class="fragment">  Input text through successive layers of classifiers</p>
+					<p class="fragment">  Each layer will extract higher and higher order features</p>
+					<p class="fragment">  With reccurrent networks, relationships of sequences can be learned</p>
+					<aside class="notes"> 
+					- Neural Networks are popular and can be very effective. 
+
+					- Not just for text classiffication but also lanaguage modeling 
+						- For example, certain NN's have performed highly with image capturing. Both a computer vision and NLP problem
+
+					- However they have drawbacks. Difficult to train. Complicated. Large requirements on training data. And difficult to 
+					  Analyze and Diagnose. 
+
+					</aside>
+					</section>					
+					<section data-markdown>
+					<h3>Summarization</h3>
+				    ![](img/S2.png)
+					</section>
+					<section>
+					<p class="fragment">  Model Text as a distribution of sentences and Topics</p>
+					<p class="fragment">  Extract most probable sentences</p>
+					</section>					
+				</section>
+				<section>
+					<section>
+					<h1>Application </h1>
+					</section>
+					<section data-markdown>
+					<p> Trump2Cash </p>
+				    ![](img/T2C.png)
+					</section>
+				    <section> 	
+					<h4>Method</h4>
+					<p class="fragment">  Pull out business names with Entity Extraction</p>
+					<p class="fragment">  Classify tweets as being positive or negative</p>
+					</section>
+				</section>
+				<section>
+				<section>
+				<h1> Tools </h1>
+				</section>
+				<section>
+				<p> <span class="fragment">Preprocessing: NLTK, Spacy, Stanford NLP, MITIE</span></p>
+				<p><span class="fragment"> Classification: scikit-learm</span></p>
+				<p><span class="fragment"> Topic Modeling: GenSim</span> </p>
+				<p><span class="fragment"> Neural Networks: Tensorflow, Keras, Torch, Lasagne, Caffe</span></p>
+			</section>
+		</section>
+		<section>
+		<h2> That's it!</h2>
+		</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
